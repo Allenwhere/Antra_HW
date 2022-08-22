@@ -1,16 +1,23 @@
+/**
+ * @author Wenxuan Zeng
+ */
+
 package Week3;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.core.Is.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertTrue;
 
-
+// original interface
 interface SongCache {
 
     /**
@@ -23,66 +30,48 @@ interface SongCache {
      * Fetch the number of plays for a song.
      *
      * @return the number of plays, or -1 if the
-    song ID is unknown.
+     * song ID is unknown.
      */
     int getPlaysForSong(String songId);
 
     /**
      * Return the top N songs played, in descending
-     order of number of plays.
+     * order of number of plays.
      */
     List<String> getTopNSongsPlayed(int n);
 }
 
 public class SongCacheImpl implements SongCache {
 
-    private static Map<String, Integer> songs = new ConcurrentHashMap<String, Integer>();
+    // use concurrentHashMap to assure thread safe
+    private static final Map<String, Integer> songs = new ConcurrentHashMap<String, Integer>();
 
-    /**
-     * Record number of plays for a song.
-     *
-     * @param songId
-     * @param numPlays
-     */
+
     @Override
     public void recordSongPlays(String songId, int numPlays) {
-        songs.compute(songId, (k, v) -> (v == null) ? numPlays : v + 1);
+        // if the key is existed, add numPlays to the old value
+        songs.compute(songId, (k, v) -> (v == null) ? numPlays : v + numPlays);
     }
 
-    /**
-     * Fetch the number of plays for a song.
-     *
-     * @param songId
-     * @return the number of plays, or -1 if the
-     * song ID is unknown.
-     */
+
     @Override
     public int getPlaysForSong(String songId) {
-
-        return songs.get(songId) == null ? -1 : songs.get(songId) ;
+        // return -1 if you get null
+        return songs.get(songId) == null ? -1 : songs.get(songId);
     }
 
-    /**
-     * Return the top N songs played, in descending
-     * order of number of plays.
-     *
-     * @param n
-     */
     @Override
     public List<String> getTopNSongsPlayed(int n) {
-        int num = n;
-        if (n > songs.size()) {
-            num = songs.size();
-        }
+        // make sure the size of the list won't exceed the number of the songs
+        int num = Math.min(n, songs.size());
+        // put entrySet into an ArrayList
         ArrayList<Map.Entry<String, Integer>> entries = new ArrayList<>(songs.entrySet());
-        Collections.sort(entries, new Comparator<Map.Entry<String, Integer>>() {
-            @Override
-            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-                return -o1.getValue().compareTo(o2.getValue());
-            }
-        });
+        // sort the ArrayList with override comparator(negative sign to achieve descending order)
+        entries.sort((o1, o2) -> -o1.getValue().compareTo(o2.getValue()));
+
+        // a new list to hold the result
         List<String> result = new ArrayList<>();
-        for (int i = 0;i < n;i++) {
+        for (int i = 0; i < num; i++) {
             result.add(entries.get(i).getKey());
         }
         return result;
@@ -103,6 +92,6 @@ public class SongCacheImpl implements SongCache {
                 "ID-1"));
         assertTrue(cache.getTopNSongsPlayed(0).isEmpty());
     }
-    
+
 }
 
