@@ -1,0 +1,53 @@
+// Create tables
+CREATE TABLE `author` (
+  `id` int NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `sex` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `author_id_UNIQUE` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `books` (
+  `id` int NOT NULL,
+  `title` varchar(45) DEFAULT NULL,
+  `publish_year` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `books_author` (
+  `book_id` int DEFAULT NULL,
+  `author_id` int DEFAULT NULL,
+  KEY `fk__idx` (`book_id`),
+  KEY `fk_author_id` (`author_id`),
+  CONSTRAINT `fk_author_id` FOREIGN KEY (`author_id`) REFERENCES `author` (`id`),
+  CONSTRAINT `fk_books_id` FOREIGN KEY (`book_id`) REFERENCES `books` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+//Insert Initial Data
+INSERT INTO author (id,name,sex) VALUES 
+(1, 'Apple', 'Female'),
+(2, 'Orange', 'Male'),
+(3, 'Grape', 'Female'),
+(4, 'Banana', 'Male'),
+(5, 'Cherry', 'Female');
+
+INSERT INTO books (id,title,publish_year) VALUES 
+(1, 'AO', 1998),
+(2, 'AG', 2021),
+(3, 'GB', 2015),
+(4, 'BC', 2005),
+(5, 'CG', 2012);
+
+
+INSERT INTO books_author (book_id,author_id) VALUES 
+(1, 1),
+(1, 2),
+(2, 1),
+(2, 3),
+(3, 3),
+(3, 4),
+(4, 4),
+(4, 5),
+(5, 5),
+(5,3);
