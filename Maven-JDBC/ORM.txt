@@ -1,0 +1,28 @@
+read ORM (hibernate)  (write it in txt file)
+ *      a. lazy loading vs eager loading
+ *      b. why ORM
+
+a. Lazy loading means the program delay the initilization of the resource while eager 
+loading initilize the resource as soon as possible (usually while executing
+the code, but sometimes it could preload some related resources.
+
+Take retrieving data as an example. Lazy loading save some performance because it 
+only load the data when necessary. But if the instance will be used multiple times,
+taking lazy loading might force the program to retrieve the each data mutiple times.
+
+In such case, using eager loading could save time because it load all the related
+resource at once.
+
+b.ORM stands for Object-Relational Mapping. It's a technique to connect Object_oriented
+and Relational Database. So, when manipulate the data, you don't use SQL but actually
+interact with the data as an object.
+
+Pros: Everything kept in one place so easier to update and maintain. It's more flexible
+because it allow you to use coding language you're familiar with and apply OOP, which is
+a natural way of thinking. It's efficient because it abstract the database and manipulating
+data just like using methods in a program.
+
+Cons: But it could lower the performance of the program since it's just use OOP as a bridge
+to connect sql. So it couldn't be better than using sql directly. And since it abstract 
+everything, the foundation of database became unreachable, you couldn't personalize your own
+sql.
