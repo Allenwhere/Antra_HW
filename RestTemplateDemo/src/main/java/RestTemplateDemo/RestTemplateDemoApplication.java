@@ -10,8 +10,4 @@ public class RestTemplateDemoApplication {
     public static void main(String[] args) {
         SpringApplication.run(RestTemplateDemoApplication.class, args);
     }
-    @Bean
-    public RestTemplate getRestTemplate(){
-        return new RestTemplate();
-    }
 }
