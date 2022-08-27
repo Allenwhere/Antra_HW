@@ -1,12 +1,15 @@
 package spring_rest.service.impl;
 
 import org.springframework.stereotype.Service;
+import spring_rest.domain.dto.Author_BookResponseDTO;
 import spring_rest.domain.entity.Author_Book;
 import spring_rest.exception.ResourceNotFoundException;
 import spring_rest.repository.Author_BookRepository;
 import spring_rest.service.Author_BookService;
 
+import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
 public class Author_BookServiceImpl implements Author_BookService {
@@ -19,19 +22,23 @@ public class Author_BookServiceImpl implements Author_BookService {
 
 
     @Override
-    public Author_Book getById(Integer id) {
+    public Author_BookResponseDTO getById(Integer id) {
         Author_Book ab = author_bookRepository.getById(id);
         if(ab == null) {
             throw new ResourceNotFoundException("");
         }
-        return ab;
+        return new Author_BookResponseDTO(ab);
     }
 
     @Override
-    public Collection<Author_Book> getAll() {
-        return author_bookRepository.getAll();
+    public Collection<Author_BookResponseDTO> getAll() {
+        return author_bookRepository.getAll()
+                .stream()
+                .map(Author_BookResponseDTO::new)
+                .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public int save(Author_Book author_book) {
         return author_bookRepository.save(author_book);
@@ -43,6 +50,7 @@ public class Author_BookServiceImpl implements Author_BookService {
      * @param id
      * @return id
      */
+    @Transactional
     @Override
     public int removeById(Integer id) {
         int result = author_bookRepository.removeById(id);

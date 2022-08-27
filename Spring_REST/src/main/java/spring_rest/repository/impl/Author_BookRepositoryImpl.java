@@ -2,6 +2,7 @@ package spring_rest.repository.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import spring_rest.domain.dto.Author_BookResponseDTO;
 import spring_rest.domain.entity.Author_Book;
 import spring_rest.domain.entity.Book;
 import spring_rest.repository.Author_BookRepository;
@@ -28,10 +29,11 @@ public class Author_BookRepositoryImpl implements Author_BookRepository {
         return query.getResultList();
     }
 
+
     @Override
     public int save(Author_Book author_book) {
-        em.persist(author_book);
-        return author_book.getId();
+        Author_Book ab = em.merge(author_book);
+        return ab.getId();
     }
 
     /**

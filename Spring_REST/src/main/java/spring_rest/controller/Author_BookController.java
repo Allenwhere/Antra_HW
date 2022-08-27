@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import spring_rest.domain.dto.Author_BookDTO;
+import spring_rest.domain.dto.Author_BookResponseDTO;
 import spring_rest.domain.entity.Author_Book;
 import spring_rest.exception.CommonErrorResponse;
 import spring_rest.exception.ResourceNotFoundException;
@@ -23,31 +25,28 @@ public class Author_BookController {
     }
 
     @GetMapping("/author_book")
-    public ResponseEntity<Collection<Author_Book>> getAll() {
+    public ResponseEntity<Collection<Author_BookResponseDTO>> getAll() {
         return new ResponseEntity<>(author_bookService.getAll(), HttpStatus.OK);
     }
 
     @GetMapping("/author_book/{id}")
-    public ResponseEntity<Author_Book> getAuthor_BookById(@PathVariable Integer id) {
+    public ResponseEntity<Author_BookResponseDTO> getAuthor_BookById(@PathVariable Integer id) {
         return new ResponseEntity<>(author_bookService.getById(id), HttpStatus.OK);
     }
 
-    @Transactional
+
     @PostMapping("/author_book")
-    public ResponseEntity<?> createAuthor(@RequestBody Author_Book ab){
-        return new ResponseEntity<>(author_bookService.save(ab),HttpStatus.CREATED);
+    public ResponseEntity<?> createAuthor_Book(@RequestBody Author_BookDTO ab){
+        return new ResponseEntity<>(author_bookService.save(ab.getAuthor_book()),HttpStatus.CREATED);
     }
 
-    @Transactional
+
     @PutMapping("/author_book/{id}")
-    public ResponseEntity<?> updateAuthor(@PathVariable Integer id, @RequestBody Author_Book ab) {
-        Author_Book ab1 = author_bookService.getById(id);
-        ab1.setAuthor((ab.getAuthor() == null)?ab1.getAuthor():ab.getAuthor());
-        ab1.setBook((ab.getBook() == null)?ab1.getBook():ab.getBook());
-        return new ResponseEntity<>(author_bookService.save(ab1),HttpStatus.OK);
+    public ResponseEntity<?> updateAuthor_Book(@PathVariable Integer id, @RequestBody Author_BookDTO ab) {
+        return new ResponseEntity<>(author_bookService.save(ab.getAuthor_book()),HttpStatus.OK);
     }
 
-    @Transactional
+
     @DeleteMapping("/author_book/{id}")
     public ResponseEntity<?> deleteAuthor(@PathVariable Integer id) {
         return new ResponseEntity<>(author_bookService.removeById(id),HttpStatus.OK);

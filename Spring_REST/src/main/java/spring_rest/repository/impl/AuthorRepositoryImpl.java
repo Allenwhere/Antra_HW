@@ -29,8 +29,10 @@ public class AuthorRepositoryImpl implements AuthorRepository {
 
     @Override
     public int save(Author author) {
-        em.persist(author);
-        return author.getId();
+        // need to create a new instance as the managed entity
+        // the original instance won't be changed, so you will get a 0 as id
+        Author a = em.merge(author);
+        return a.getId();
     }
 
     /**

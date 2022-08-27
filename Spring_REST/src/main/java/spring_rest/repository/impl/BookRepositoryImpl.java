@@ -28,8 +28,8 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public int save(Book book) {
-        em.persist(book);
-        return book.getId();
+        Book b = em.merge(book);
+        return b.getId();
     }
 
     /**

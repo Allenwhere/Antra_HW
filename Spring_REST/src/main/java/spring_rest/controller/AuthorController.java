@@ -3,6 +3,7 @@ package spring_rest.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import spring_rest.domain.dto.AuthorResponseDTO;
 import spring_rest.domain.entity.Author;
 import spring_rest.exception.CommonErrorResponse;
 import spring_rest.exception.ResourceNotFoundException;
@@ -25,31 +26,27 @@ public class AuthorController {
     }
 
     @GetMapping("/authors")
-    public ResponseEntity<Collection<Author>> getAll() {
+    public ResponseEntity<Collection<AuthorResponseDTO>> getAll() {
         return new ResponseEntity<>(authorService.getAll(), HttpStatus.OK);
     }
 
     @GetMapping("/authors/{id}")
-    public ResponseEntity<Author> getAuthorById(@PathVariable Integer id) {
+    public ResponseEntity<AuthorResponseDTO> getAuthorById(@PathVariable Integer id) {
         return new ResponseEntity<>(authorService.getById(id), HttpStatus.OK);
     }
 
-    @Transactional
+
     @PostMapping("/authors")
     public ResponseEntity<?> createAuthor(@RequestBody Author author){
         return new ResponseEntity<>(authorService.save(author),HttpStatus.CREATED);
     }
 
-    @Transactional
+
     @PutMapping("/authors/{id}")
     public ResponseEntity<?> updateAuthor(@PathVariable Integer id, @RequestBody Author author) {
-        Author author1 = authorService.getById(id);
-        author1.setName((author.getName() == null)?author1.getName():author.getName());
-        author1.setSex((author.getSex() == null)?author1.getSex():author.getSex());
-        return new ResponseEntity<>(authorService.save(author1),HttpStatus.OK);
+        return new ResponseEntity<>(authorService.save(author),HttpStatus.OK);
     }
 
-    @Transactional
     @DeleteMapping("/authors/{id}")
     public ResponseEntity<?> deleteAuthor(@PathVariable Integer id) {
         return new ResponseEntity<>(authorService.removeById(id),HttpStatus.OK);

@@ -1,14 +1,15 @@
 package spring_rest.service;
 
 import org.springframework.stereotype.Service;
+import spring_rest.domain.dto.AuthorResponseDTO;
 import spring_rest.domain.entity.Author;
 
 import java.util.Collection;
 
 @Service
 public interface AuthorService {
-    Author getById(Integer id);
-    Collection<Author> getAll();
+    AuthorResponseDTO getById(Integer id);
+    Collection<AuthorResponseDTO> getAll();
     int save(Author author);
     /**
      * if the element is not found, throw exception.
